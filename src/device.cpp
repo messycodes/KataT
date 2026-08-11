@@ -780,7 +780,13 @@ bool cvk_device::create_vulkan_queues_and_device(uint32_t num_queues,
     VkDeviceQueueGlobalPriorityCreateInfoKHR globalPriorityCreateInfo;
     cvk_info_fn("queue global priority: %u",
                 m_features_queue_global_priority.globalPriorityQuery);
-    if (m_features_queue_global_priority.globalPriorityQuery) {
+    // Adreno (Qualcomm) drivers reject ANY explicit
+    // VkDeviceQueueGlobalPriorityCreateInfoKHR (even the default MEDIUM) with
+    // VK_ERROR_NOT_PERMITTED_EXT unless the process holds the matching Android
+    // priority permission, which makes vkCreateDevice fail and clvk unable to
+    // enumerate any device. Omitting the struct is fully spec-compliant and
+    // lets vkCreateDevice succeed everywhere.
+    if (false && m_features_queue_global_priority.globalPriorityQuery) {
         const uint32_t num_priorities = 4;
         static const VkQueueGlobalPriorityKHR priorities[num_priorities] = {
             VK_QUEUE_GLOBAL_PRIORITY_LOW_KHR,

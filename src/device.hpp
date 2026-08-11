@@ -80,7 +80,9 @@ struct cvk_device : public _cl_device_id,
             save_pipeline_cache(entry.first, entry.second);
             vkDestroyPipelineCache(m_dev, entry.second, nullptr);
         }
-        vkDestroyDevice(m_dev, nullptr);
+        if (m_dev != VK_NULL_HANDLE) {
+            vkDestroyDevice(m_dev, nullptr);
+        }
     }
 
 #ifdef CLVK_UNIT_TESTING_ENABLED
@@ -825,7 +827,7 @@ private:
     VkPhysicalDeviceGlobalPriorityQueryFeaturesKHR
         m_features_queue_global_priority{};
 
-    VkDevice m_dev;
+    VkDevice m_dev = VK_NULL_HANDLE;
     std::vector<const char*> m_vulkan_device_extensions;
 
     std::vector<cvk_vulkan_queue_wrapper> m_vulkan_queues;
