@@ -55,7 +55,7 @@ jobs:
           key: clvk-android-${{ env.NDK_VERSION }}-online
 
       - name: Checkout clvk (this fork)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: messycodes/KataT
           ref: main
